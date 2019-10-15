@@ -1,2 +1,11 @@
 language: csharp
-solution: C_Sharp_Challenge_Skeleton.sln
+mono: none
+sudo: required
+dotnet: 3.0
+script:
+    - dotnet restore
+    - dotnet build
+    - dotnet test tests/Challenge.Tests/Challenge.Tests.csproj
+global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+    - DOTNET_CLI_TELEMETRY_OPTOUT=1
